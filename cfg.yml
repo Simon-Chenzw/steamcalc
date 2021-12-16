@@ -1,0 +1,20 @@
+expired_limit: 60 # minute
+sqlite:
+    name: steam.db
+    init_script: create.sql
+proxy:
+    url: ''
+    enable_clash: false
+buff:
+    # 需要及时更新， 通常过期时间为 10 天
+    cookie: a=b;c=d
+    goods: # 需要爬取的商品类别
+        - game: csgo
+          category: # 具体商品 e.g. weapon_knife_butterfly
+              - weapon_awp
+              - weapon_ak47
+              - weapon_m4a1
+              - weapon_m4a1_silencer
+          category_group: # 分类 e.g. knife
+display:
+    max_row: 20
