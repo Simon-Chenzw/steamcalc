@@ -1,4 +1,4 @@
-from typing import Any, List, Optional
+from typing import Any, List, Literal, Optional, Union
 
 import yaml
 from pydantic import BaseModel
@@ -11,9 +11,24 @@ class SqliteConfig(BaseModel):
     init_script: str
 
 
+class ClashDisabledConfig(BaseModel):
+    enable: Literal[False]
+
+
+class ClashEnableConfig(BaseModel):
+    enable: Literal[True]
+    api_url: str
+    selector: str
+    test_url: str
+    test_timeout: int
+
+
+ClashConfig = Union[ClashDisabledConfig, ClashEnableConfig]
+
+
 class ProxyConfig(BaseModel):
     url: str
-    enable_clash: bool
+    clash: ClashConfig
 
 
 class GoodsConfig(BaseModel):
@@ -56,5 +71,5 @@ class Config(BaseModel):
     display: DisplayConfig
 
 
-with open("cfg.yml", 'r') as fp:
+with open("cfg.yml", 'r', encoding='utf-8') as fp:
     cfg = Config.parse_obj(yaml.load(fp, yaml.FullLoader))

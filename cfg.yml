@@ -4,10 +4,15 @@ sqlite:
     init_script: create.sql
 proxy:
     url: ''
-    enable_clash: false
+    clash:
+        enable: false
+        api_url: ''
+        selector: ''
+        test_url: https://steamcommunity.com/market/ # 测试 proxy 能否正常联通
+        test_timeout: 1000 # ms
 buff:
     # 需要及时更新， 通常过期时间为 10 天
-    cookie: a=b;c=d
+    cookie: ''
     goods: # 需要爬取的商品类别
         - game: csgo
           category: # 具体商品 e.g. weapon_knife_butterfly
@@ -16,5 +21,9 @@ buff:
               - weapon_m4a1
               - weapon_m4a1_silencer
           category_group: # 分类 e.g. knife
+              -
+              #   - rifle
+              #   - pistol
+              #   - smg
 display:
     max_row: 20

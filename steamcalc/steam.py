@@ -13,6 +13,11 @@ from .db import db
 
 logger = logging.getLogger('steam')
 
+proxy_dict = {
+    'http': f"http://{cfg.proxy.url}",
+    'https': f"http://{cfg.proxy.url}",
+}
+
 
 class Item(BaseModel):
     item_nameid: int  # extra
@@ -32,7 +37,7 @@ class Item(BaseModel):
                 'item_nameid': item_nameid,
                 'two_factor': 0,
             },
-            proxies=cfg.proxy.url,
+            proxies=proxy_dict,
         )
         assert res.status_code == 200
         json: Dict[str, Any] = res.json()
@@ -88,7 +93,7 @@ def solve(min_price: int, max_price: int):
                 time_lim,
             ),
         ).fetchall()
-        print(need)
+        logger.info(f"{len(need)} item(s) need to be update")
     for item_id, in need:
         while True:
             try:
@@ -134,7 +139,7 @@ def get_item_id_crawler(appid: int, hash_name: str) -> int:
     """
     def crawler() -> int:
         url = f"https://steamcommunity.com/market/listings/{appid}/{hash_name}"
-        res = requests.get(url, proxies=cfg.proxy.url)
+        res = requests.get(url, proxies=proxy_dict)
         assert res.status_code == 200
 
         match = re.search(
@@ -149,8 +154,10 @@ def get_item_id_crawler(appid: int, hash_name: str) -> int:
         try:
             item_id = crawler()
         except Exception as err:
-            logger.warning(f"'{err}' at get item_id")
+            logger.warning(f"can't get item_id")
             proxy.change_proxy()
+            res = requests.get("https://api.ip.sb/ip", proxies=proxy_dict)
+            logger.info(f"new ip: {res.text.strip()}")
         else:
             logger.info(f"get: {item_id=}")
             return item_id

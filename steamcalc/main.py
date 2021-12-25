@@ -13,8 +13,9 @@ def main():
     logging.basicConfig(
         level=logging.INFO,
         format="%(name)-8s %(message)s",
-        handlers=[RichHandler(show_time=False)],
+        handlers=[RichHandler(show_time=False, show_path=False)],
     )
+
     logger.debug("start")
 
     while True:

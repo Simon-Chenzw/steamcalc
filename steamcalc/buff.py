@@ -139,5 +139,5 @@ def getGoods(
         assert res.status_code == 200
         js = res.json()
         yield from parse_obj_as(List[Item], js['data']['items'])
-        if page == js['data']['total_page']:
+        if page > js['data']['total_page']:
             break
